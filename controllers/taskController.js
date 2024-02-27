@@ -3,6 +3,7 @@
 const Task = require('../models/Task');
 
 const taskController = {
+
   getAllTasks: async (req, res) => {
     try {
       const tasks = await Task.find();
@@ -14,20 +15,23 @@ const taskController = {
   },
 
   createTask: async (req, res) => {
-    const { title, description, userId } = req.body;
+    const { title, description,priority, projectId } = req.body;
     try {
       const newTask = new Task({
         title,
         description,
-        user: userId
+        priority,
+        project: projectId
       });
       await newTask.save();
       res.status(201).json({ message: 'Task created successfully' });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: 'Server error' });
+      res.status(500).json({ message: 'Server erroooor' });
     }
   },
+ 
+
 
   getTaskById: async (req, res) => {
     const taskId = req.params.id;
@@ -42,14 +46,14 @@ const taskController = {
       res.status(500).json({ message: 'Server error' });
     }
   },
-  getAllTasksByIdUser : async (req,res)=>{
-    const userId = req.params.id;
+  getAllTasksByIdProject : async (req,res)=>{
+    const projectId = req.params.id;
       try {
-        const tasks = await Task.find({user:userId});
+        const tasks = await Task.find({project:projectId});
         res.status(200).json(tasks);
       }catch(error){
       console.log(error);
-      res.status(404).json({message: "task not found with id of user " + userId})
+      res.status(404).json({message: "task not found with id of user " })
     } 
   },
 
