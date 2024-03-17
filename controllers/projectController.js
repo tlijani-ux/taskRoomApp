@@ -1,6 +1,7 @@
 const Project = require('../models/Project');
 const Task = require('../models/Task');
 
+
 const projectController = {
     getAllProjects : async(req,res) =>{
         try {
@@ -27,7 +28,7 @@ const projectController = {
             res.status(500).json({ message: 'Server error' });
         }
     },
-
+    
     getProjectById: async (req, res) => {
         const projectId = req.params.id;
         try {
