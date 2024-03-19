@@ -1,12 +1,14 @@
 const Project = require('../models/Project');
 const Task = require('../models/Task');
+const Notice = require('../models/notification');
+
 
 
 const projectController = {
     getAllProjects : async(req,res) =>{
         try {
-            const tasks = await Project.find();
-            res.status(200).json(tasks);
+            const projects = await Project.find();
+            res.status(200).json(projects);
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Server error' });
@@ -14,12 +16,40 @@ const projectController = {
     },
 
     createProject: async (req, res) => {
-        const { title, dueDate, userId } = req.body;
+
         try {
+            
+           // const { userId } = req.user;
+
+            const { title, team ,  stage, date, priority } = req.body;
+
+            let text = "New task has been assigned to you";
+            if (team?.length > 1) {
+              text = text + ` and ${team?.length - 1} others.`;
+            }
+        
+            text =
+              text +
+              ` The task priority is set a ${priority} priority, so check and act accordingly. The task date is ${new Date(
+                date
+              ).toDateString()}. Thank you!!!`;
+        
+
             const newProject = new Project({
                 title,
-                dueDate,
-                user: userId ,
+                team,
+                stage: stage.toLowerCase(),
+                date: new Date(date), // Ensure date is properly formatted
+                priority: priority.toLowerCase(),
+            });
+
+            console.log('New project object:', newProject); // Log the new project object
+
+        
+            await Notice.create({
+                team,
+                text,
+                project: newProject._id,
             });
             await newProject.save();
             res.status(201).json({ message: 'Project created successfully' , project: newProject });
@@ -28,6 +58,7 @@ const projectController = {
             res.status(500).json({ message: 'Server error' });
         }
     },
+    
     
     getProjectById: async (req, res) => {
         const projectId = req.params.id;

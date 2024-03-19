@@ -2,10 +2,12 @@
 
 const express = require('express');
 const app = express();
-const PORT =  6000;
+const PORT =  4000;
+const cors=require('cors');
 
 // Middleware
 app.use(express.json()); // Parse incoming requests with JSON payloads
+app.use(cors())
 
 // Database connection
 require('./config/connectDB');

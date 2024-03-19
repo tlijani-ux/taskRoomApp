@@ -4,10 +4,10 @@ const projectController = require('../controllers/projectController');
 
 
 router.get('/projects/:id/tasks', projectController.getAllTasksForProject);
-router.get('/projects', projectController.getAllProjects);
-router.get('/projects/:id', projectController.getProjectById);
-router.post('/projects', projectController.createProject);
-router.delete('/projects/:id', projectController.deleteProject);
+router.get('/get', projectController.getAllProjects);
+router.get('/getById/:id', projectController.getProjectById);
+router.post('/create', projectController.createProject);
+router.delete('/delete/:id', projectController.deleteProject);
 
 
 
