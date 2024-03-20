@@ -1,17 +1,13 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-
 const protectRoute = async (req, res, next) => {
     try {
-        let token = req.cookies.token; // Corrected req.cookie.token to req.cookies.token
+        let token = req.cookies.token;
 
         if (!token) {
             const decodedToken = jwt.verify(token, process.env.JWT_secret);
-                
             const resp= await User.findById(decodedToken.userId).select("isAdmin email");
-
             req.user = {
-             
                 email:resp.email,
                 isAdmin:resp.isAdmin,
                 userId:decodedToken.userId,
@@ -25,29 +21,16 @@ const protectRoute = async (req, res, next) => {
         res.status(401).json({ error: 'not authorized , try login' });
     }
 }
-
 const isAdminRoute = (req,res,next)=>{
-
     if(req.user && req.user.isAdmin){
         next();
     }else{
-          
         return res.status(401).json({
             status:false,
             message:"Not auth as admin , login as admin "
         })
-
-
     }
-
-
-
 }
-
-
-
-
-
 
 
 

@@ -41,11 +41,10 @@ const userController = {
           message: "User account has been deactivated, contact the admin"
         });
       }
-      // Compare the provided password with the hashed password
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (passwordMatch) {
         // User authenticated
-        const token = generateToken(user); // Generate token
+        const token = generateToken(user);
         return res.status(200).json({ message: 'User authenticated', token }); // Return token
       } else {
         return res.status(401).json({ message: 'Incorrect password' });
@@ -63,7 +62,6 @@ const userController = {
       if (!project) {
         return res.status(404).json({ message: "Project not found" });
       }
-  
       const teamMembers = project.team.map(member => ({
         firstName: member.firstName,
         lastName: member.lastName,
@@ -123,40 +121,20 @@ const userController = {
 
     try {
       const {userId}=req.user;
-
       const user=await User.findById(userId);
-
       if(user){
-          
         user.password = req.body.password;
-
         await user.save();
-
         user.password=undefined;
-
         res.status(201).json({
           status:true,
           message: `Password changed succesfully`
         })
-        
-
-
-
       }
-
-      
-      
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal Server Error' });
-      
     }
-
-
-
-
-
-
   }
 };
 

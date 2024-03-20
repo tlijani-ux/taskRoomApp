@@ -25,6 +25,10 @@ const taskSchema = new mongoose.Schema({
     type: String,
     enum: ['not done', 'done'],
     default: 'not done'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 

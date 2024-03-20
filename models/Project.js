@@ -8,32 +8,29 @@ const ProjectSchema = new mongoose.Schema({
     priority: { 
         type: String,
         enum: ['high', 'medium', 'low'],
-        default:"medium",
+        default: "medium",
     },
-    date:{
+    date: {
         type: Date,
         default: new Date()
     },
-    stage:{
+    stage: {
         type: String,
         enum: ['to do', 'in progress', 'completed'],
         default: 'to do'
     },
-    subTasks:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Task'
-        }
-    ],
-    team:{
-        type: [{type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    subTasks: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task'
+    }],
+    team: {
+        type: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
     },
     isTrashed: {
-        type:Boolean, default:false
+        type: Boolean,
+        default: false
     },
-},
-   {timestamps:true}
-);
+}, {timestamps: true});
 
 const Project = mongoose.model('Project', ProjectSchema);
 

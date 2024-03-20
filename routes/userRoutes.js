@@ -13,11 +13,11 @@ router.post('/signup', userController.signup);
 router.post('/signin', userController.signin);
 
 router.get('/get-team/:projectId', userController.teamlist);
-router.get('/notifications', protectRoute, userController.getNotificationsList);
+// router.get('/notifications', protectRoute, userController.getNotificationsList);
 
-// router.put('/profile', protectRoute , updateUserProfile);
-router.put('/read-notifications', protectRoute, userController.markNotificationRead);
-router.put('/change-password',protectRoute , userController.changeUserPassword);
+// // router.put('/profile', protectRoute , updateUserProfile);
+// router.put('/read-notifications', protectRoute, userController.markNotificationRead);
+// router.put('/change-password',protectRoute , userController.changeUserPassword);
 
 
 

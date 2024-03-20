@@ -2,64 +2,54 @@ const Project = require('../models/Project');
 const Task = require('../models/Task');
 const Notice = require('../models/notification');
 
-
-
 const projectController = {
-    getAllProjects : async(req,res) =>{
+    getAllProjectsWithSubtasksTitles: async (req, res) => {
         try {
-            const projects = await Project.find();
+            const projects = await Project.find({}, 'title subTasks')
+                .populate({
+                    path: 'subTasks',
+                    select: 'title description', 
+                })
             res.status(200).json(projects);
         } catch (error) {
-            console.error(error);
+            console.error('Error retrieving projects with subtasks:', error);
             res.status(500).json({ message: 'Server error' });
         }
     },
-
     createProject: async (req, res) => {
-
         try {
-            
-           // const { userId } = req.user;
-
-            const { title, team ,  stage, date, priority } = req.body;
-
-            let text = "New task has been assigned to you";
-            if (team?.length > 1) {
-              text = text + ` and ${team?.length - 1} others.`;
-            }
-        
-            text =
-              text +
-              ` The task priority is set a ${priority} priority, so check and act accordingly. The task date is ${new Date(
-                date
-              ).toDateString()}. Thank you!!!`;
-        
-
-            const newProject = new Project({
-                title,
-                team,
-                stage: stage.toLowerCase(),
-                date: new Date(date), // Ensure date is properly formatted
-                priority: priority.toLowerCase(),
-            });
-
-            console.log('New project object:', newProject); // Log the new project object
-
-        
-            await Notice.create({
-                team,
-                text,
-                project: newProject._id,
-            });
-            await newProject.save();
-            res.status(201).json({ message: 'Project created successfully' , project: newProject });
+          const { title, team, stage, date, priority } = req.body;
+          const newProject = new Project({
+            title,
+            team,
+            stage: stage.toLowerCase(),
+            date: new Date(date),
+            priority: priority.toLowerCase(),
+          });
+              await newProject.save();
+          // Create the notice text
+          let text = "New Project has been assigned to you";
+          if (team?.length > 1) {
+            text = text + ` and ${team?.length - 1} others.`;
+          }
+          text =
+            text +
+            ` The Project priority is set a ${priority} priority, so check and act accordingly. The Project date is ${new Date(
+              date
+            ).toDateString()}. Thank you!!!`;
+    
+          // Create a  notification associated with the  project
+        await Notice.create({
+            team,
+            text,
+            project: newProject._id,
+        });
+        res.status(201).json({ message: 'Project created successfully', project: newProject });
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Server error' });
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
         }
-    },
-    
-    
+},  
     getProjectById: async (req, res) => {
         const projectId = req.params.id;
         try {
@@ -73,7 +63,6 @@ const projectController = {
             res.status(500).json({ message: 'Server error' });
         }
     },
-
     deleteProject: async (req, res) => {
         const projectId = req.params.id;
         try {
@@ -102,10 +91,6 @@ const projectController = {
         }
     }
 }
-
-
-
-
 
 module.exports = projectController;
 
